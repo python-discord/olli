@@ -4,6 +4,10 @@ nav_order: 2
 ---
 
 # Installation
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Docker
 
@@ -19,11 +23,22 @@ Head to [ghcr.io/python-discord/olli](https://ghcr.io/python-discord/olli) to se
 
 Once you have a container image you need to configure it by placing a config file in a location described in [Configuration](./configuration.md).
 
+An example Docker run might look like:
+```bash
+$ docker run -e "WEBHOOK_URL=abc" --mount type=bind,source=$(pwd)/config-example.toml,target=/olli/config.toml ghcr.io/python-discord/olli:latest
+```
+
+## Kubernetes
+
+The Kubernetes setup is very much similar to [Docker](#docker), so reading that is advised.
+
+An example Kubernetes deployment manifest can be found [here](https://github.com/python-discord/olli/blob/main/deployment.yaml) in the repository.
+
 ## PyPI
 
 Olli is available on PyPI under the [`olli`](https://pypi.org/project/olli/) package.
 
-Install it with `pip install olli`.
+Install it with `pip install olli`. The PyPI version **only supports Python 3.9+**.
 
 You should then be able to run `olli` (or sometimes `python -m olli`) to start Olli.
 
