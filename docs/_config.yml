@@ -6,7 +6,10 @@ url: ""
 twitter_username: PythonDiscord
 github_username:  python-discord
 
-theme: just-the-docs
+remote_theme: pmarsceill/just-the-docs
+
+plugins:
+  - jekyll-remote-theme
 
 color_scheme: light
 
