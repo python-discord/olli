@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Get the version
       id: get_version
-      run: echo ::set-output name=version::$(echo $GITHUB_REF | cut -d / -f 3)
+      run: echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
 
   publish_docker_image:
     name: Build & Publish Docker image
