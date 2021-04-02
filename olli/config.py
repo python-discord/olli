@@ -72,6 +72,21 @@ class ServiceConfig(BaseModel):
 
         return value
 
+    @validator("tokens")
+    def warn_above_ten(cls, value: list[TokenConfig]) -> list[TokenConfig]:
+        """
+        Warn a user if they have more than 10 tokens.
+
+        This is because we cannot handle more than 10 token triggers at once until we
+        batch triggers into groups of 10 to distribute to the webhook.
+        """
+        if len(value) > 10:
+            logger.warning(
+                "More than 10 token triggers in one period cannot be handled, be careful."
+            )
+
+        return value
+
 
 class OlliConfig(BaseModel):
     """Class representing root Olli config."""
