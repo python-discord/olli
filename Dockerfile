@@ -25,4 +25,4 @@ ENV GIT_SHA=$git_sha
 COPY . .
 
 # Start Olli
-CMD ["olli"]
+CMD ["python", "-m", "olli"]
