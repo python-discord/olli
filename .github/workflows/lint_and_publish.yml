@@ -110,7 +110,7 @@ jobs:
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     needs: [publish_docker_image]
-    environment: production
+    environment: development
 
     steps:
       - name: Checkout code
