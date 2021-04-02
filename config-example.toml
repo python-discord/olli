@@ -1,0 +1,24 @@
+[olli]
+interval_minutes = 5
+
+[loki]
+api_url = "http://localhost:3100/"
+jobs = [
+    "default/bot"
+]
+
+[discord]
+# The only Discord configuration option is webhook_url, which you can
+# either specify here or in an environment variable called WEBHOOK_URL
+# with the config file taking precedence.
+
+[[olli.tokens]]
+token = "ERROR"
+color = "#ff5f5f"
+
+[[olli.tokens]]
+token = "WARN"
+color = "#ffe24d"
+
+[[olli.tokens]]
+token = "INFO"
