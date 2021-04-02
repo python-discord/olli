@@ -6,18 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  fetch_version:
-    name: Fetch release version
-    runs-on: ubuntu-latest
-
-    outputs:
-      version: ${{ steps.get_version.outputs.version }}
-
-    steps:
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
-
   publish_docker_image:
     name: Build & Publish Docker image
     runs-on: ubuntu-latest
@@ -47,7 +35,7 @@ jobs:
           cache-to: type=inline
           tags: |
             ghcr.io/python-discord/olli:latest
-            ghcr.io/python-discord/olli:${{ needs.fetch_version.outputs.version }}
+            ghcr.io/python-discord/olli:${{ github.event.release.tag_name }}
   
   publish_pypi_package:
     name: Build & Publish PyPI package
