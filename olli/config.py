@@ -1,5 +1,6 @@
 """Configuration loading and validation."""
 import os
+from pathlib import Path
 from typing import Optional
 
 import toml
@@ -8,6 +9,15 @@ from loguru import logger
 from pydantic import BaseModel, validator
 
 load_dotenv()
+
+
+# All the locations where we might find a config file
+CONFIG_PATHS = [
+    "./olli.toml",
+    "/config/olli.toml",
+    "/olli/config.toml",
+    "/etc/olli/config.toml"
+]
 
 
 class TokenConfig(BaseModel):
@@ -73,8 +83,21 @@ class OlliConfig(BaseModel):
 
 def get_config() -> OlliConfig:
     """Open the config file, parse the TOML and convert to Pydantic objects."""
-    logger.info("Parsing config file")
-    with open("config.toml") as conf_file:
+    logger.info("Searching for config file")
+
+    path = None
+
+    for file_path in CONFIG_PATHS:
+        if (config_file := Path(file_path)).exists():
+            path = config_file
+            logger.info(f"Found config at {file_path}")
+            break
+
+    if not path:
+        logger.critical("Could not find a config file. Please refer to the documentation.")
+        raise SystemExit(1)
+
+    with open(config_file) as conf_file:
         return OlliConfig(**toml.load(conf_file))
 
 
