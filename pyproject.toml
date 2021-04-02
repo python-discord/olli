@@ -7,8 +7,10 @@ license = "MIT"
 readme = "README.md"
 
 # Links
-homepage = "https://github.com/python-discord/olli"
+homepage = "https://python-discord.github.io/olli/"
 repository = "https://github.com/python-discord/olli"
+documentation = "https://python-discord.github.io/olli/"
+
 keywords = ["loki", "discord", "logs", "observability"]
 
 classifiers = [
