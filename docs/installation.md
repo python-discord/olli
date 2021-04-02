@@ -17,6 +17,14 @@ There are several tags available (`ghcr.io/python-discord/olli:{tag}`):
 
 Head to [ghcr.io/python-discord/olli](https://ghcr.io/python-discord/olli) to see all available versions.
 
+Once you have a container image you need to configure it by placing a config file in a location described in [Configuration](./configuration.md).
+
 ## PyPI
 
-*Coming soon...*
+Olli is available on PyPI under the [`olli`](https://pypi.org/project/olli/) package.
+
+Install it with `pip install olli`.
+
+You should then be able to run `olli` (or sometimes `python -m olli`) to start Olli.
+
+Once installed follow [Configuration](./configuration.md) to configure Olli to report.
