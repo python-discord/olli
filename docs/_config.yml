@@ -1,0 +1,21 @@
+title: Olli
+email: joseph@josephbanks.me
+description: Olli searches your Loki logs and relays matching terms to Discord.
+baseurl: ""
+url: ""
+twitter_username: PythonDiscord
+github_username:  python-discord
+
+theme: just-the-docs
+
+color_scheme: light
+
+aux_links:
+  "Olli on GitHub":
+    - "https://github.com/python-discord/olli"
+
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub."
+gh_edit_repository: "https://github.com/python-discord/olli"
+gh_edit_branch: "main"
+gh_edit_view_mode: "tree"
