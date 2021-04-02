@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olli
+spec:
+  selector:
+    matchLabels:
+      app: olli
+  template:
+    metadata:
+      labels:
+        app: olli
+    spec:
+      containers:
+      - name: olli
+        image: ghcr.io/python-discord/olli
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
