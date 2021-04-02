@@ -28,17 +28,6 @@ pycodestyle = ">=2.7.0,<2.8.0"
 pyflakes = ">=2.3.0,<2.4.0"
 
 [[package]]
-name = "flake8-annotations"
-version = "2.6.2"
-description = "Flake8 Type Annotation Checks"
-category = "dev"
-optional = false
-python-versions = ">=3.6.1,<4.0.0"
-
-[package.dependencies]
-flake8 = ">=3.7,<4.0"
-
-[[package]]
 name = "flake8-docstrings"
 version = "1.6.0"
 description = "Extension for flake8 which uses pydocstyle to check docstrings"
@@ -254,7 +243,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "55d35326762696b2984aa3af0a630206a9993e260297f0d3a4c8e4f569286c7a"
+content-hash = "f218ba8150c76237749546db7c62087eeb2407cc370ba64d099696aee047ef56"
 
 [metadata.files]
 certifi = [
@@ -268,10 +257,6 @@ colorama = [
 flake8 = [
     {file = "flake8-3.9.0-py2.py3-none-any.whl", hash = "sha256:12d05ab02614b6aee8df7c36b97d1a3b2372761222b19b58621355e82acddcff"},
     {file = "flake8-3.9.0.tar.gz", hash = "sha256:78873e372b12b093da7b5e5ed302e8ad9e988b38b063b61ad937f26ca58fc5f0"},
-]
-flake8-annotations = [
-    {file = "flake8-annotations-2.6.2.tar.gz", hash = "sha256:0d6cd2e770b5095f09689c9d84cc054c51b929c41a68969ea1beb4b825cac515"},
-    {file = "flake8_annotations-2.6.2-py3-none-any.whl", hash = "sha256:d10c4638231f8a50c0a597c4efce42bd7b7d85df4f620a0ddaca526138936a4f"},
 ]
 flake8-docstrings = [
     {file = "flake8-docstrings-1.6.0.tar.gz", hash = "sha256:9fe7c6a306064af8e62a055c2f61e9eb1da55f84bb39caef2b84ce53708ac34b"},
