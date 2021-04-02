@@ -17,4 +17,14 @@ spec:
         resources:
           limits:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "300m"
+        envFrom:
+          - secretRef:
+              name: olli-env
+        volumeMounts:
+          - mountPath: /config/
+            name: olli-config
+    volumes:
+      - name: olli-config
+        configMap:
+          name: olli-config
