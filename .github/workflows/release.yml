@@ -15,7 +15,7 @@ jobs:
 
     steps:
     - name: Ensure tag is in format v*.*.*
-      run: "[[ ${{ github.event.tag_name }} == v*.*.* ]]"
+      run: "[[ ${{ github.event.release.tag_name }} == v*.*.* ]]"
 
     - name: Get the version
       id: get_version
