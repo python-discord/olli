@@ -23,7 +23,7 @@ Once you have a container image you need to configure it by placing a config fil
 
 Olli is available on PyPI under the [`olli`](https://pypi.org/project/olli/) package.
 
-Install it with `pip install olli`.
+Install it with `pip install olli`. The PyPI version **only supports Python 3.9+**.
 
 You should then be able to run `olli` (or sometimes `python -m olli`) to start Olli.
 
