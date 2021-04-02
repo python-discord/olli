@@ -6,10 +6,23 @@ on:
   workflow_dispatch:
 
 jobs:
+  fetch_version:
+    name: Fetch release version
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+
+    steps:
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+
   publish_docker_image:
     name: Build & Publish Docker image
     runs-on: ubuntu-latest
     environment: production
+    needs: [fetch_version]
 
     steps:
       - name: Checkout code
@@ -35,7 +48,7 @@ jobs:
           cache-to: type=inline
           tags: |
             ghcr.io/python-discord/olli:latest
-            ghcr.io/python-discord/olli:${{ github.event.release.tag_name }}
+            ghcr.io/python-discord/olli:${{ needs.fetch_version.outputs.version }}
   
   publish_pypi_package:
     name: Build & Publish PyPI package
@@ -64,3 +77,16 @@ jobs:
         run: poetry publish
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+
+  publish_notification:
+    name: Publish notification to Discord
+    runs-on: ubuntu-latest
+    needs: [publish_pypi_package, publish_docker_image, fetch_version]
+
+    steps:
+      - name: Send Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Olli `${{ needs.fetch_version.outputs.version }}` has been published to Docker + PyPI.'
