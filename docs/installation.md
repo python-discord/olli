@@ -4,6 +4,10 @@ nav_order: 2
 ---
 
 # Installation
+{: .no_toc }
+
+1. TOC
+{:toc}
 
 ## Docker
 
@@ -23,6 +27,12 @@ An example Docker run might look like:
 ```bash
 $ docker run -e "WEBHOOK_URL=abc" --mount type=bind,source=$(pwd)/config-example.toml,target=/olli/config.toml ghcr.io/python-discord/olli:latest
 ```
+
+## Kubernetes
+
+The Kubernetes setup is very much similar to [Docker](#docker), so reading that is advised.
+
+An example Kubernetes deployment manifest can be found [here](https://github.com/python-discord/olli/blob/main/deployment.yaml) in the repository.
 
 ## PyPI
 
