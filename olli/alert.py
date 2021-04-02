@@ -14,7 +14,7 @@ def get_match(token: TokenConfig) -> TokenMatch:
     """Search the configured service logs for a given token."""
     try:
         logger.debug(f"Searching for token {token.token}")
-        svc_logs = api_client.get_token_logs(token.token)
+        svc_logs = api_client.get_token_logs(token)
     except httpx.ConnectError:
         logger.error("Could not connect to Loki")
         return webhook.send_olli_error("Loki refused to connect.")
