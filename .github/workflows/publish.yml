@@ -101,6 +101,7 @@ jobs:
           file: ./Dockerfile
           push: true
           cache-from: type=registry,ref=ghcr.io/python-discord/olli:main
+          cache-to: type=inline
           tags: |
             ghcr.io/python-discord/olli:main
             ghcr.io/python-discord/olli:${{ steps.sha_tag.outputs.tag }}
