@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: olli
-        image: ghcr.io/python-discord/olli
+        image: ghcr.io/python-discord/olli:main
         resources:
           limits:
             memory: "128Mi"
@@ -24,7 +24,7 @@ spec:
         volumeMounts:
           - mountPath: /config/
             name: olli-config
-    volumes:
-      - name: olli-config
-        configMap:
-          name: olli-config
+      volumes:
+        - name: olli-config
+          configMap:
+            name: olli-config
