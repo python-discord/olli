@@ -19,6 +19,11 @@ Head to [ghcr.io/python-discord/olli](https://ghcr.io/python-discord/olli) to se
 
 Once you have a container image you need to configure it by placing a config file in a location described in [Configuration](./configuration.md).
 
+An example Docker run might look like:
+```bash
+$ docker run -e "WEBHOOK_URL=abc" --mount type=bind,source=$(pwd)/config-example.toml,target=/olli/config.toml ghcr.io/python-discord/olli:latest
+```
+
 ## PyPI
 
 Olli is available on PyPI under the [`olli`](https://pypi.org/project/olli/) package.
