@@ -24,7 +24,8 @@ class TokenConfig(BaseModel):
     """Class representing a token config entry."""
 
     token: str
-    color: str = "#7289DA"
+    color: Optional[str] = "#7289DA"
+    case_sensitive: Optional[bool] = False
 
 
 class LokiConfig(BaseModel):
