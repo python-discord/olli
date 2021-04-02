@@ -51,10 +51,13 @@ color = "#ff5f5f"
 
 [[olli.tokens]]
 token = "INFO"
+case_sensitive = true
 # When no color is provided it falls back to blurple.
 ```
 
 Tokens accept a `token` and `color` key, the first one is required. `token` represents the phrase that should be searched for and `color` is a hex color (**with** hashtag) that will be used for the generated embeds.
+
+Tokens also accept a `case_sensitive` key which defaults to `false`. If you want to match the case as written in the `token` field set `case_sensitive` to `true` in the token config.
 
 ## `loki`
 
@@ -94,6 +97,7 @@ color = "#ff5f5f"
 [[olli.tokens]]
 token = "WARN"
 color = "#ffe24d"
+case_sensitive = true
 
 [[olli.tokens]]
 token = "INFO"
