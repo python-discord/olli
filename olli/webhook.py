@@ -64,4 +64,4 @@ def send_token_matches(matches: list[TokenMatch]) -> None:
 
         resp.raise_for_status()
     else:
-        logger.info("No exceptions to send to Discord")
+        logger.info("No alerts to send to Discord")
