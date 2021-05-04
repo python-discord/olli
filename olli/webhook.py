@@ -1,5 +1,6 @@
 """This module contains the logic for sending webhooks to Discord."""
 from datetime import datetime
+from typing import Any
 
 import httpx
 from loguru import logger
@@ -7,6 +8,20 @@ from loguru import logger
 from olli.config import CONFIG
 from olli.structures import TokenMatch
 
+
+def send_with_backoff(url: str, json: dict[str, Any], n: int = 5) -> None:
+    """Send a webhook payload with configurable retries."""
+    i = 0
+    while True:
+        try:
+            httpx.post(url, json=json)
+            break
+        except Exception:
+            i += 1
+            if i == n:
+                logger.exception(f"Could not POST to URL {url}")
+                break
+            
 
 def send_olli_error(error: str) -> None:
     """Send an error embed containing the passed error message to Discord."""
