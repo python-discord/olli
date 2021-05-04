@@ -58,7 +58,8 @@ def run() -> None:
     matches = []
 
     for token in CONFIG.olli.tokens:
-        matches.append(get_match(token))
+        if match := get_match(token):
+            matches.append(match)
 
     send_alerts(matches)
     logger.info("Olli search complete.")
