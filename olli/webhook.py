@@ -21,7 +21,7 @@ def send_with_backoff(url: str, json: dict[str, Any], n: int = 5) -> None:
             if i == n:
                 logger.exception(f"Could not POST to URL {url}")
                 break
-            
+
 
 def send_olli_error(error: str) -> None:
     """Send an error embed containing the passed error message to Discord."""
