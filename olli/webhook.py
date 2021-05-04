@@ -14,7 +14,7 @@ def send_with_backoff(url: str, json: dict[str, Any], n: int = 5) -> None:
     i = 0
     while True:
         try:
-            httpx.post(url, json=json)
+            httpx.post(url, json=json).raise_for_status()
             break
         except Exception:
             i += 1
@@ -26,7 +26,7 @@ def send_with_backoff(url: str, json: dict[str, Any], n: int = 5) -> None:
 def send_olli_error(error: str) -> None:
     """Send an error embed containing the passed error message to Discord."""
     logger.info("Sending error payload to Discord")
-    httpx.post(CONFIG.discord.webhook_url, json={
+    send_with_backoff(CONFIG.discord.webhook_url, {
         "embeds": [{
             "title": "Olli Error",
             "color": 0xff5f5f,
@@ -73,10 +73,8 @@ def send_token_matches(matches: list[TokenMatch]) -> None:
 
     if len(embeds) > 0:
         logger.info("Sending alerts payload to Discord")
-        resp = httpx.post(CONFIG.discord.webhook_url, json={
+        send_with_backoff(CONFIG.discord.webhook_url, {
             "embeds": embeds
         })
-
-        resp.raise_for_status()
     else:
         logger.info("No alerts to send to Discord")
