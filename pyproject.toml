@@ -22,7 +22,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-httpx = "^0.17.1"
+httpx = ">=0.17.1,<0.24.0"
 toml = "^0.10.2"
 pydantic = "^1.8.1"
 schedule = "^1.0.0"
