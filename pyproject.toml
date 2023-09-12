@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "olli"
-version = "0.1.2"
+version = "1.0.0"
 description = "Olli searches your Loki logs and relays matching terms to Discord."
-authors = ["Joe Banks <joseph@josephbanks.me>"]
+authors = ["Joe Banks <joseph@josephbanks.me>", "Chris Lovering <chris.lovering.95@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
@@ -14,7 +14,7 @@ documentation = "https://python-discord.github.io/olli/"
 keywords = ["loki", "discord", "logs", "observability"]
 
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators"
