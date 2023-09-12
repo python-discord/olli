@@ -38,9 +38,9 @@ Tokens also accept a `case_sensitive` key which defaults to `false`. If you want
 
 ## `loki`
 
-`loki_api_url`: The base URL of your Loki instance, for example `http://localhost:3100/`.
+`loki_api_url`: The base URL of your Loki instance, for example `http://localhost:3100`.
 
-`loki_jobs`: A list of jobs to filter for logs in, only services in this list will be searched for tokens. An example might be `loki_jobs=["default/bot","default/site"]`.
+`loki_jobs`: A list of jobs to filter for logs in, only services in this list will be searched for tokens. An example might be `loki_jobs=default/bot,default/site`.
 
 `loki_max_logs`: This is passed on to Loki to define the maximum number of logs that should be returned, it defaults to 5,000 (raised from the 100 default of Loki).
 
@@ -53,8 +53,8 @@ Tokens also accept a `case_sensitive` key which defaults to `false`. If you want
 All together, a configuration file for Olli might look something along the lines of:
 
 ```
-loki_api_url=http://localhost:3100/
-loki_jobs=["default/bot"]
+loki_api_url=http://localhost:3100
+loki_jobs=default/bot,default/site
 
 discord_webhook_url=some_discord_webhook
 
