@@ -20,6 +20,6 @@ spec:
             cpu: "300m"
         envFrom:
           - secretRef:
-            name: olli-env
+              name: olli-env
           - configMapRef:
-            name: olli-config-env
+              name: olli-config-env
