@@ -6,14 +6,14 @@ import schedule
 from loguru import logger
 
 from olli.alert import run
-from olli.config import CONFIG
+from olli.config import SERVICE_CONFIG
 
 
 @logger.catch
 def start() -> None:
     """Start the Olli process."""
     logger.info("Starting Olli")
-    schedule.every(CONFIG.olli.interval_minutes).minutes.do(run)
+    schedule.every(SERVICE_CONFIG.interval_minutes).minutes.do(run)
 
     run()
 

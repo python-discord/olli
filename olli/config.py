@@ -1,23 +1,40 @@
 """Configuration loading and validation."""
-import os
-from pathlib import Path
+
 from typing import Optional
 
-import tomllib
-from dotenv import load_dotenv
 from loguru import logger
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 
-load_dotenv()
+
+class EnvConfig(
+    BaseSettings,
+    env_file=".env",
+    env_file_encoding="utf-8",
+    env_nested_delimiter="__",
+    extra="ignore",
+):
+    """Our default configuration for models that should load from .env files."""
 
 
-# All the locations where we might find a config file
-CONFIG_PATHS = [
-    "./olli.toml",
-    "/config/olli.toml",
-    "/olli/config.toml",
-    "/etc/olli/config.toml"
-]
+class _LokiConfig(EnvConfig, env_prefix="loki_"):
+    """Loki specific configuration."""
+
+    api_url: str
+    jobs: list[str]
+    max_logs: Optional[int] = 5_000
+
+
+LOKI_CONFIG = _LokiConfig()
+
+
+class _DiscordConfig(EnvConfig, env_prefix="discord_"):
+    """Configuration for Discord alerting."""
+
+    webhook_url: Optional[str]
+
+
+DISCORD_CONFIG = _DiscordConfig()
 
 
 class TokenConfig(BaseModel):
@@ -28,38 +45,7 @@ class TokenConfig(BaseModel):
     case_sensitive: Optional[bool] = False
 
 
-class LokiConfig(BaseModel):
-    """Loki specific configuration."""
-
-    api_url: str
-    jobs: list[str]
-    max_logs: Optional[int] = 5_000
-
-
-class DiscordConfig(BaseModel):
-    """Configuration for Discord alerting."""
-
-    webhook_url: Optional[str]
-
-    @validator("webhook_url", always=True)
-    def env_provided_webhook(cls, value: Optional[str]) -> str:
-        """
-        If no webhook is specified in the config, try fetch from environment.
-
-        If not found in the environment either then raise a validation error.
-        """
-        if value:
-            return value
-
-        if webhook := os.environ.get("WEBHOOK_URL"):
-            return webhook
-
-        raise ValueError(
-            "Must specify webhook_url under [discord] or WEBHOOK_URL env var"
-        )
-
-
-class ServiceConfig(BaseModel):
+class _ServiceConfig(EnvConfig, env_prefix="service_"):
     """Configuration of the Olli status."""
 
     interval_minutes: int
@@ -81,40 +67,10 @@ class ServiceConfig(BaseModel):
         This is because we cannot handle more than 10 token triggers at once until we
         batch triggers into groups of 10 to distribute to the webhook.
         """
-        if len(value) > 10:
-            logger.warning(
-                "More than 10 token triggers in one period cannot be handled, be careful."
-            )
+        if len(value) > 10:  # noqa: PLR2004
+            logger.warning("More than 10 token triggers in one period cannot be handled, be careful.")
 
         return value
 
 
-class OlliConfig(BaseModel):
-    """Class representing root Olli config."""
-
-    loki: LokiConfig
-    olli: ServiceConfig
-    discord: DiscordConfig = DiscordConfig()
-
-
-def get_config() -> OlliConfig:
-    """Open the config file, parse the TOML and convert to Pydantic objects."""
-    logger.info("Searching for config file")
-
-    path = None
-
-    for file_path in CONFIG_PATHS:
-        if (config_file := Path(file_path)).exists():
-            path = config_file
-            logger.info(f"Found config at {file_path}")
-            break
-
-    if not path:
-        logger.critical("Could not find a config file. Please refer to the documentation.")
-        raise SystemExit(1)
-
-    with open(config_file, "rb") as conf_file:
-        return OlliConfig(**tomllib.load(conf_file))
-
-
-CONFIG = get_config()
+SERVICE_CONFIG = _ServiceConfig()

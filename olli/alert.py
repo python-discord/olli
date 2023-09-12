@@ -4,7 +4,7 @@ from loguru import logger
 
 from olli import webhook
 from olli.api import LokiHTTPClient
-from olli.config import CONFIG, TokenConfig
+from olli.config import SERVICE_CONFIG, TokenConfig
 from olli.structures import TokenMatch
 
 api_client = LokiHTTPClient()
@@ -12,23 +12,19 @@ api_client = LokiHTTPClient()
 
 def get_match(token: TokenConfig) -> TokenMatch:
     """Search the configured service logs for a given token."""
+    logger.debug(f"Searching for token {token.token}")
     try:
-        logger.debug(f"Searching for token {token.token}")
         svc_logs = api_client.get_token_logs(token)
     except httpx.ConnectError:
         logger.error("Could not connect to Loki")
         return webhook.send_olli_error("Loki refused to connect.")
     except httpx.HTTPStatusError as e:
         logger.error(f"Loki returned error status code: {e.response.status_code}")
-        return webhook.send_olli_error(
-            f"Loki returned a bad status code: `{e.response.status_code}`"
-        )
+        return webhook.send_olli_error(f"Loki returned a bad status code: `{e.response.status_code}`")
 
     if svc_logs["status"] != "success":
         logger.error(f"Received an error response from Loki for token {token.token}")
-        return webhook.send_olli_error(
-            "Loki returned an error, check your service names are correct."
-        )
+        return webhook.send_olli_error("Loki returned an error, check your service names are correct.")
 
     match = TokenMatch(token, {})
 
@@ -57,7 +53,7 @@ def run() -> None:
     logger.info("Running Olli search")
     matches = []
 
-    for token in CONFIG.olli.tokens:
+    for token in SERVICE_CONFIG.tokens:
         if match := get_match(token):
             matches.append(match)
 

@@ -5,7 +5,7 @@ from typing import Any
 import httpx
 from loguru import logger
 
-from olli.config import CONFIG
+from olli.config import DISCORD_CONFIG, SERVICE_CONFIG
 from olli.structures import TokenMatch
 
 
@@ -26,12 +26,12 @@ def send_with_backoff(url: str, json: dict[str, Any], n: int = 5) -> None:
 def send_olli_error(error: str) -> None:
     """Send an error embed containing the passed error message to Discord."""
     logger.info("Sending error payload to Discord")
-    send_with_backoff(CONFIG.discord.webhook_url, {
+    send_with_backoff(DISCORD_CONFIG.webhook_url, {
         "embeds": [{
             "title": "Olli Error",
             "color": 0xff5f5f,
             "description": f"Olli encountered an error: {error}",
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }]
     })
 
@@ -56,7 +56,7 @@ def send_token_matches(matches: list[TokenMatch]) -> None:
                 "name": "Olli"
             },
             "footer": {
-                "text": f"Last {CONFIG.olli.interval_minutes} minutes"
+                "text": f"Last {SERVICE_CONFIG.interval_minutes} minutes",
             },
             "timestamp": datetime.utcnow().isoformat(),
             "fields": []
@@ -73,7 +73,7 @@ def send_token_matches(matches: list[TokenMatch]) -> None:
 
     if len(embeds) > 0:
         logger.info("Sending alerts payload to Discord")
-        send_with_backoff(CONFIG.discord.webhook_url, {
+        send_with_backoff(DISCORD_CONFIG.webhook_url, {
             "embeds": embeds
         })
     else:
