@@ -56,6 +56,12 @@ class _LokiConfig(EnvConfig, env_prefix="loki_"):
     jobs: list[str]
     max_logs: int | None = 5_000
 
+    @field_validator("api_url")
+    @classmethod
+    def rstrip_api_url(cls, value: str) -> str:
+        """Strip trailing slashes from the api_url as this breaks API calls."""
+        return value.rstrip("/")
+
 
 LOKI_CONFIG = _LokiConfig()
 
