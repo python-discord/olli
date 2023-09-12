@@ -1,4 +1,4 @@
-"""This module contains the logic for grepping logs and generating Discord alerts."""
+"""The logic for grepping logs and generating Discord alerts."""
 import httpx
 from loguru import logger
 
@@ -43,7 +43,7 @@ def get_match(token: TokenConfig) -> TokenMatch:
 
 def send_alerts(matches: list[TokenMatch]) -> None:
     """Take the found matches and relay them to Discord."""
-    # TODO: batch into 10 to avoid embed limits
+    # TODO: batch into 10 to avoid embed limits  # noqa: TD002,TD003,FIX002
     logger.info("Sending webhook payload to Discord")
     webhook.send_token_matches(matches)
 
@@ -51,11 +51,11 @@ def send_alerts(matches: list[TokenMatch]) -> None:
 def run() -> None:
     """Entrypoint for Olli's search process."""
     logger.info("Running Olli search")
-    matches = []
-
-    for token in SERVICE_CONFIG.tokens:
-        if match := get_match(token):
-            matches.append(match)
+    matches = [
+        match
+        for token in SERVICE_CONFIG.tokens
+        if (match := get_match(token))
+    ]
 
     send_alerts(matches)
     logger.info("Olli search complete.")

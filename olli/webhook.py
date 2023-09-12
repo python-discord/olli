@@ -1,5 +1,5 @@
-"""This module contains the logic for sending webhooks to Discord."""
-from datetime import datetime
+"""The logic for sending webhooks to Discord."""
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -16,7 +16,7 @@ def send_with_backoff(url: str, json: dict[str, Any], n: int = 5) -> None:
         try:
             httpx.post(url, json=json).raise_for_status()
             break
-        except Exception:
+        except httpx.HTTPStatusError:
             i += 1
             if i == n:
                 logger.exception(f"Could not POST to URL {url}")
@@ -31,13 +31,14 @@ def send_olli_error(error: str) -> None:
             "title": "Olli Error",
             "color": 0xff5f5f,
             "description": f"Olli encountered an error: {error}",
-            "timestamp": datetime.utcnow().isoformat(),
-        }]
+            "timestamp": datetime.now(tz=UTC).isoformat(),
+        }],
     })
 
 
 def send_token_matches(matches: list[TokenMatch]) -> None:
-    """Send the found token matches to Discord.
+    """
+    Send the found token matches to Discord.
 
     The method checks that each token has at least 1 match and then merges
     together up to 10 embeds into one webhook payload.
@@ -53,20 +54,20 @@ def send_token_matches(matches: list[TokenMatch]) -> None:
             "description": f"`{sum(match.services.values())}` events matching",
             "color": int(match.token.color[1:], 16),
             "author": {
-                "name": "Olli"
+                "name": "Olli",
             },
             "footer": {
                 "text": f"Last {SERVICE_CONFIG.interval_minutes} minutes",
             },
-            "timestamp": datetime.utcnow().isoformat(),
-            "fields": []
+            "timestamp": datetime.now(tz=UTC).isoformat(),
+            "fields": [],
         }
 
         for service, count in match.services.items():
             embed["fields"].append({
                 "name": service,
                 "value": f"`{count:,}` logs",
-                "inline": True
+                "inline": True,
             })
 
         embeds.append(embed)
@@ -74,7 +75,7 @@ def send_token_matches(matches: list[TokenMatch]) -> None:
     if len(embeds) > 0:
         logger.info("Sending alerts payload to Discord")
         send_with_backoff(DISCORD_CONFIG.webhook_url, {
-            "embeds": embeds
+            "embeds": embeds,
         })
     else:
         logger.info("No alerts to send to Discord")

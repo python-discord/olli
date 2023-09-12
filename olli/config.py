@@ -1,9 +1,8 @@
 """Configuration loading and validation."""
 
-from typing import Optional
 
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -22,7 +21,7 @@ class _LokiConfig(EnvConfig, env_prefix="loki_"):
 
     api_url: str
     jobs: list[str]
-    max_logs: Optional[int] = 5_000
+    max_logs: int | None = 5_000
 
 
 LOKI_CONFIG = _LokiConfig()
@@ -31,7 +30,7 @@ LOKI_CONFIG = _LokiConfig()
 class _DiscordConfig(EnvConfig, env_prefix="discord_"):
     """Configuration for Discord alerting."""
 
-    webhook_url: Optional[str]
+    webhook_url: str | None
 
 
 DISCORD_CONFIG = _DiscordConfig()
@@ -41,8 +40,8 @@ class TokenConfig(BaseModel):
     """Class representing a token config entry."""
 
     token: str
-    color: Optional[str] = "#7289DA"
-    case_sensitive: Optional[bool] = False
+    color: str | None = "#7289DA"
+    case_sensitive: bool | None = False
 
 
 class _ServiceConfig(EnvConfig, env_prefix="service_"):
@@ -51,15 +50,18 @@ class _ServiceConfig(EnvConfig, env_prefix="service_"):
     interval_minutes: int
     tokens: list[TokenConfig]
 
-    @validator("interval_minutes")
+    @field_validator("interval_minutes")
+    @classmethod
     def must_be_above_zero(cls, value: int) -> int:
         """Validate that the interval minutes is 1 or greater."""
         if value < 1:
-            raise ValueError("Interval must be above zero minutes.")
+            msg = "Interval must be above zero minutes."
+            raise ValueError(msg)
 
         return value
 
-    @validator("tokens")
+    @field_validator("tokens")
+    @classmethod
     def warn_above_ten(cls, value: list[TokenConfig]) -> list[TokenConfig]:
         """
         Warn a user if they have more than 10 tokens.
