@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "olli"
-version = "1.0.0"
+version = "1.0.1"
 description = "Olli searches your Loki logs and relays matching terms to Discord."
 authors = ["Joe Banks <joseph@josephbanks.me>", "Chris Lovering <chris.lovering.95@gmail.com>"]
 license = "MIT"
