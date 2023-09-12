@@ -1,28 +1,17 @@
-FROM python:3.9-slim
-
-# Set pip to have cleaner logs and no saved cache
-ENV PIP_NO_CACHE_DIR=false \
-    POETRY_VIRTUALENVS_CREATE=false
-
-# Install Poetry and add it to the path
-RUN pip install --user poetry
-ENV PATH="${PATH}:/root/.local/bin"
-
-WORKDIR /olli
-
-# Copy dependencies and lockfile
-COPY pyproject.toml poetry.lock /olli/
-
-# Install dependencies and lockfile, excluding development
-# dependencies,
-RUN poetry install --no-dev --no-interaction --no-ansi
+FROM --platform=linux/amd64 ghcr.io/owl-corp/python-poetry-base:3.11-slim
 
 # Set SHA build argument
 ARG git_sha="development"
 ENV GIT_SHA=$git_sha
 
+# Install dependencies and lockfile, excluding development dependencies
+WORKDIR /olli
+COPY pyproject.toml poetry.lock /olli/
+RUN poetry install --without dev
+
 # Copy the rest of the project code
 COPY . .
 
 # Start Olli
-CMD ["python", "-m", "olli"]
+ENTRYPOINT ["poetry"]
+CMD ["run", "python", "-m", "olli"]

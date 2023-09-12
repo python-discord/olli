@@ -21,13 +21,13 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-httpx = ">=0.17.1,<0.24.0"
-toml = "^0.10.2"
-pydantic = "^1.8.1"
-schedule = "^1.0.0"
-python-dotenv = "^0.16.0"
-loguru = "^0.5.3"
+python = "3.11.*"
+
+httpx = "0.25.0"
+pydantic = "1.10.12"
+schedule = "1.2.0"
+python-dotenv = "1.0.0"
+loguru = "0.7.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.9.0"
