@@ -1,0 +1,39 @@
+name: Publish to Docker and PyPI
+
+on:
+  workflow_call:
+
+jobs:
+  publish_pypi_package:
+    name: Build & Publish PyPI package
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Python Dependencies
+        uses: HassanAbouelela/actions/setup-python@setup-python_v1.4.2
+        with:
+          python_version: '3.9'
+
+      - name: Build package using poetry
+        run: poetry build
+
+      - name: Publish package with Poetry
+        run: poetry publish
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+
+  publish_notification:
+    name: Publish notification to Discord
+    runs-on: ubuntu-latest
+    needs: publish_pypi_package
+
+    steps:
+      - name: Send Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Olli `${{ github.ref_name }}` has been published to Docker + PyPI.'

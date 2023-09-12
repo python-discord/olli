@@ -1,0 +1,74 @@
+name: Build & Deploy
+
+on:
+  workflow_call:
+    inputs:
+      sha-tag:
+        description: "A short-form SHA tag for the commit that triggered this workflow"
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build & Publish Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Generate docker image metadata
+        uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ghcr.io/python-discord/olli
+          tags: |
+            type=raw,value=${{ inputs.sha-tag }}
+            type=raw,value=main
+            type=raw,value=latest
+            type=semver,pattern=v{{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern=v{{major}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.ref == 'refs/heads/main' }}
+          cache-from: type=registry,ref=ghcr.io/python-discord/olli:main
+          cache-to: type=inline
+          tags:  ${{ steps.meta.outputs.tags }}
+
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    needs: build
+    environment: development
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: azure/setup-kubectl@v3
+
+      - name: Authenticate with Kubernetes
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Deploy to Kubernetes
+        uses: Azure/k8s-deploy@v4
+        with:
+          manifests: |
+              deployment.yaml
+          images: 'ghcr.io/python-discord/olli:${{ inputs.sha-tag }}'
