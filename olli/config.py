@@ -1,9 +1,23 @@
 """Configuration loading and validation."""
 
+import json
+import typing as t
 
 from loguru import logger
-from pydantic import BaseModel, field_validator
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel, field_validator, fields
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
+
+
+def custom_decode_complex_value(
+    __: str,
+    ___: fields.FieldInfo,
+    value: t.Any,
+) -> t.Any:
+    """Parse complex values as CSV if they cannot be parsed as JSON."""
+    try:
+        return json.loads(value)
+    except ValueError:
+        return value.split(",")
 
 
 class EnvConfig(
@@ -14,6 +28,25 @@ class EnvConfig(
     extra="ignore",
 ):
     """Our default configuration for models that should load from .env files."""
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        """Monkey patch default sources to have the custom CSV parser fallback."""
+        dotenv_settings.decode_complex_value = custom_decode_complex_value
+        env_settings.decode_complex_value = custom_decode_complex_value
+        return (
+            init_settings,
+            env_settings,
+            dotenv_settings,
+            file_secret_settings,
+        )
 
 
 class _LokiConfig(EnvConfig, env_prefix="loki_"):
@@ -69,7 +102,7 @@ class _ServiceConfig(EnvConfig, env_prefix="service_"):
         This is because we cannot handle more than 10 token triggers at once until we
         batch triggers into groups of 10 to distribute to the webhook.
         """
-        if len(value) > 10:  # noqa: PLR2004
+        if len(value) > 10:
             logger.warning("More than 10 token triggers in one period cannot be handled, be careful.")
 
         return value
