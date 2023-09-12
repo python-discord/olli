@@ -25,7 +25,7 @@ Once you have a container image you need to configure it by placing a config fil
 
 An example Docker run might look like:
 ```bash
-$ docker run -e "WEBHOOK_URL=abc" --mount type=bind,source=$(pwd)/config-example.toml,target=/olli/config.toml ghcr.io/python-discord/olli:latest
+$ docker run --env-file .env ghcr.io/python-discord/olli:latest
 ```
 
 ## Kubernetes
