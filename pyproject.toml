@@ -24,10 +24,10 @@ classifiers = [
 python = "3.11.*"
 
 httpx = "0.25.0"
-pydantic = "1.10.12"
-schedule = "1.2.0"
-python-dotenv = "1.0.0"
 loguru = "0.7.2"
+pydantic = "2.0.3"
+pydantic-settings = "2.0.3"
+schedule = "1.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "3.4.0"
