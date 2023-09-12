@@ -30,13 +30,28 @@ python-dotenv = "1.0.0"
 loguru = "0.7.2"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.9.0"
-flake8-annotations = "^2.6.2"
-flake8-docstrings = "^1.6.0"
-flake8-import-order = "^0.18.1"
+pre-commit = "3.4.0"
+ruff = "0.0.288"
 
 [tool.poetry.scripts]
 olli = "olli.__main__:start"
+
+[tool.ruff]
+target-version = "py311"
+extend-exclude = [".cache"]
+ignore = [
+    "ANN002", "ANN003", "ANN101", "ANN102",
+    "ARG003",
+    "C901",
+    "D100", "D104", "D105", "D107", "D203", "D212", "D214", "D215", "D416",
+]
+line-length = 120
+select = ["ALL"]
+
+[tool.ruff.isort]
+order-by-type = false
+case-sensitive = true
+combine-as-imports = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
