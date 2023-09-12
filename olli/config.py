@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Optional
 
-import toml
+import tomllib
 from dotenv import load_dotenv
 from loguru import logger
 from pydantic import BaseModel, validator
@@ -113,8 +113,8 @@ def get_config() -> OlliConfig:
         logger.critical("Could not find a config file. Please refer to the documentation.")
         raise SystemExit(1)
 
-    with open(config_file) as conf_file:
-        return OlliConfig(**toml.load(conf_file))
+    with open(config_file, "rb") as conf_file:
+        return OlliConfig(**tomllib.load(conf_file))
 
 
 CONFIG = get_config()
