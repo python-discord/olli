@@ -23,16 +23,16 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "3.11.*"
 
-httpx = "0.25.0"
+httpx = "0.25.2"
 loguru = "0.7.2"
-pydantic = "2.0.3"
-pydantic-settings = "2.0.3"
-schedule = "1.2.0"
+pydantic = "2.5.2"
+pydantic-settings = "2.1.0"
+schedule = "1.2.1"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "3.4.0"
-ruff = "0.0.288"
-taskipy = "1.12.0"
+pre-commit = "3.5.0"
+ruff = "0.1.7"
+taskipy = "1.12.2"
 
 [tool.poetry.scripts]
 olli = "olli.__main__:start"
