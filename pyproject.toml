@@ -45,17 +45,20 @@ olli = "python -m olli"
 [tool.ruff]
 target-version = "py311"
 extend-exclude = [".cache"]
+select = ["ALL"]
 ignore = [
     "ANN002", "ANN003", "ANN101", "ANN102", "ANN401",
     "ARG003",
     "C901",
+    "CPY001",
     "D100", "D104", "D105", "D107", "D203", "D212", "D214", "D215", "D416",
     "EM101",
     "PLR",
     "TRY003",
 ]
 line-length = 120
-select = ["ALL"]
+unsafe-fixes = true
+preview = true
 
 [tool.ruff.isort]
 order-by-type = false
