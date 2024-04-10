@@ -31,7 +31,7 @@ class LokiHTTPClient:
         case_filter = "(?i)" if not token.case_sensitive else ""
 
         resp = httpx.get(self.route("query_range"), params={
-            "query": f'{{job=~"({job_regex})"}} |~ "{case_filter}{token.token}"',
+            "query": f'{{service_name=~"({job_regex})-.+"}} |~ "{case_filter}{token.token}"',
             "start": f"{start_ts:0.0f}",
             "limit": LOKI_CONFIG.max_logs,
         })
